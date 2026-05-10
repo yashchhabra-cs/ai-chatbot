@@ -2,7 +2,7 @@ from flask import Flask,request,jsonify,render_template
 import os
 from dotenv import load_dotenv
 import anthropic
-app = Flask(__name__) 
+app = Flask(__name__) # this is the entry point of the application  creation of app. 
 load_dotenv()
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY")) 
 @app.route('/')
