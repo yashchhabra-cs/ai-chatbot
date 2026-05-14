@@ -1,3 +1,4 @@
+
 from flask import Flask,request,jsonify,render_template 
 import os
 from dotenv import load_dotenv
@@ -12,17 +13,19 @@ def home():
 def chat():
     data = request.json
     user_message=data['message']
-    response= client.messages.create(
-        model="claude-3-5-sonnet-20240620",
-        max_tokens=1000,
-        messages=[
-            {
-                "role": "user",
-                "content": user_message # this is the message from the user
-            }
-        ]
-    )
-    return jsonify({"response": response.content[0].text}) # this is the response from the claude model 
+    try:
+        response = client.messages.create(
+            model="claude-3-5-sonnet-20240620",
+            max_tokens=1000,
+            system="You are a helpful assistant. Answer clearly and concisely. If you don't know something, say I don't know.",
+            messages=[
+                {"role": "user", "content": user_message}
+            ]
+        )
+        return jsonify({"response": response.content[0].text})
+    
+    except Exception as e:
+        return jsonify({"error": "Something went wrong. Please try again."}), 500
 if __name__ == '__main__':
     app.run(debug=True)  # debug=True means that the server will automatically reload when the code is changed
 
